@@ -1,5 +1,5 @@
 const mongoose = require("mongoose")
-const Schema = moongose.Schema;
+const Schema = mongoose.Schema;
 
 const Categoria = new Schema ({
     nome:{
@@ -18,4 +18,4 @@ const Categoria = new Schema ({
     }
 })
 
-mongoose.models("categorias", Categoria)
+mongoose.model("categorias", Categoria)

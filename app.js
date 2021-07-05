@@ -3,7 +3,12 @@
 
 npm install --save express-handlebars
 
-npm install --save mongoose */
+npm install --save mongoose 
+
+npm install --save express-session
+
+npm install --save connect-flash
+*/
 const express = require("express")
 const handlebars = require("express-handlebars")
 const app = express()
@@ -11,6 +16,19 @@ const mongoose = require("mongoose")
 const admin = require("./routes/admin")
 const path = require("path")
 //Configurações
+	//Sessão
+	app.use(session({
+		secret: "cursodenode",
+		resave: true,
+		saveUnitialized: true
+	}))
+	app.use(flash())
+	//Middleware
+	app.use((req,res,next) => {
+		res.locals.success_msg = req.flash("success_msg")
+		res.locals.error_msg = req.flash("error_msg")
+		next()
+	})
     //Utilizando o express no lougar do Body Parser
     app.use(express.urlencoded({extended:true}))
     app.use(express.json())
@@ -27,6 +45,8 @@ const path = require("path")
 	
 	//Public
 	app.use(express.static(path.join(__dirname, "public")))
+	
+
 //Rotas
 	app.get("/", (req, res) =>{res.send("Rota Principal")})
 
