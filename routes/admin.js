@@ -4,37 +4,42 @@ const mongoose = require("mongoose")
 require("../models/Categoria")
 const Categoria = mongoose.model("categorias")
 
-router.get("/", (req, res) =>{
+router.get("/", (req, res) => {
     res.render("admin/index")
 })
 
-router.get("/posts", (req, res)=>{
+router.get("/posts", (req, res) => {
     res.send("página de posts")
 })
 
-router.get("/categorias", (req, res)=>{
-    res.render("admin/categorias")
+router.get("/categorias", (req, res) => {
+    Categoria.find().lean().sort({ date: "desc" }).then((categorias) => {
+        res.render("admin/categorias", {categorias: categorias})
+    }).catch((err) => {
+        res.flash("error_msg", "Houve um erro ao listar as categorias")
+        res.redirect("/admin")
+    })
 })
 
-router.get("/categorias/add", (req, res)=>{
+router.get("/categorias/add", (req, res) => {
     res.render("admin/addcategorias")
 })
 
-router.post("/categorias/nova", (req,res) =>{
-    
+router.post("/categorias/nova", (req, res) => {
+
     var erros = []
 
-    if(!req.body.nome || typeof req.body.nome == undefined || req.body.nome === null){
-        erros.push({texto: "Nome inválido"})
-    }else if(!req.body.slug || typeof req.body.slug == undefined || req.body.slug === null){
-        erros.push({texto: "Slug inválido"})
-    }else if(req.body.nome.length < 2){
-        erros.push({texto: "Nome da categoria é muito pequeno"})
+    if (!req.body.nome || typeof req.body.nome == undefined || req.body.nome === null) {
+        erros.push({ texto: "Nome inválido" })
+    } else if (!req.body.slug || typeof req.body.slug == undefined || req.body.slug === null) {
+        erros.push({ texto: "Slug inválido" })
+    } else if (req.body.nome.length < 2) {
+        erros.push({ texto: "Nome da categoria é muito pequeno" })
     }
-    
-    if(erros.length > 0){
-        res.render("admin/addcategorias", {erros: erros})
-    } else{
+
+    if (erros.length > 0) {
+        res.render("admin/addcategorias", { erros: erros })
+    } else {
         const novaCategoria = {
             nome: req.body.nome,
             slug: req.body.slug
@@ -42,7 +47,7 @@ router.post("/categorias/nova", (req,res) =>{
         new Categoria(novaCategoria).save().then(() => {
             req.flash("success_msg", "Categoria criada com sucesso!")
             res.redirect("/admin/categorias")
-        }).catch((err) =>{
+        }).catch((err) => {
             req.flash("error_msg", "Houve um erro ao salvar a categoria, tente novamente!")
             res.redirect("/admin")
         })
