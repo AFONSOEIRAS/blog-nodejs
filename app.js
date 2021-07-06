@@ -15,12 +15,14 @@ const app = express()
 const mongoose = require("mongoose")
 const admin = require("./routes/admin")
 const path = require("path")
+const session = require("express-session")
+const flash = require("connect-flash")
 //Configurações
 	//Sessão
 	app.use(session({
 		secret: "cursodenode",
 		resave: true,
-		saveUnitialized: true
+		saveUninitialized: true
 	}))
 	app.use(flash())
 	//Middleware
@@ -45,7 +47,7 @@ const path = require("path")
 	
 	//Public
 	app.use(express.static(path.join(__dirname, "public")))
-	
+
 
 //Rotas
 	app.get("/", (req, res) =>{res.send("Rota Principal")})
