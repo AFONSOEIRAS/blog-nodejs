@@ -10,7 +10,7 @@ const Postagem = new Schema({
         type: String, 
         required: true
     },
-    discricao:{
+    descricao:{
         type: String, 
         required: true
     },
@@ -29,4 +29,4 @@ const Postagem = new Schema({
     }
 })
 
-moogoose.model("postagens", Postagem)
+mongoose.model("postagens", Postagem)
