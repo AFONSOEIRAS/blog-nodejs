@@ -191,4 +191,16 @@ router.post("/postagem/edit", (req, res) => {
 
 })
 
+
+//Outra forma de deletar, porém não é recomendada, deve-se usar a rota post
+router.get("/postagens/deletar/:id", (req, res) => {
+    Postagem.remove({_id: req.params.id}).then(() =>{
+        req.flash("success_msg", "Postagem deletada com sucesso!")
+        res.redirect("/admin/postagens")
+    }).catch((err) =>{
+        req.flash("error_msg", "Houve um erro interno")
+        res.redirect("/admin/postagens")
+    })
+})
+
 module.exports = router
