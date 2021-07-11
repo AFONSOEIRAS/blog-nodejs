@@ -15,7 +15,7 @@ npm install --save connect-flash
 
 npm install --save bcryptjs
 
-npm install --save passport 
+npm install --save passport-local
 */
 const express = require("express")
 const handlebars = require("express-handlebars")
@@ -48,6 +48,7 @@ require("./config/auth")(passport)
 	app.use((req,res,next) => {
 		res.locals.success_msg = req.flash("success_msg")
 		res.locals.error_msg = req.flash("error_msg")
+		res.locals.error = req.flash("error")
 		next()
 	})
     //Utilizando o express no lougar do Body Parser
