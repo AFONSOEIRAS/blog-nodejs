@@ -16,6 +16,13 @@ npm install --save connect-flash
 npm install --save bcryptjs
 
 npm install --save passport-local
+
+
+Deploy no Heroku
+--------------------
+npm init -y
+
+npm start
 */
 const express = require("express")
 const handlebars = require("express-handlebars")
@@ -32,6 +39,7 @@ const Categoria = mongoose.model("categorias")
 const usuarios = require("./routes/usuario")
 const passport = require("passport")
 require("./config/auth")(passport)
+const db = require("./config/db")
 //Configurações
 	//Sessão
 	app.use(session({
@@ -60,7 +68,7 @@ require("./config/auth")(passport)
     app.set('view engine', 'handlebars');
 	//Mongoose
 	mongoose.Promise = global.Promise;
-	mongoose.connect("mongodb://localhost/blogapp").then(() =>{
+	mongoose.connect(db.mongoURI).then(() =>{
 		console.log("Conectado ao mongo");
 	}).catch((err) =>{
 		console.log("Erro ao se conectar:" + err);
@@ -139,9 +147,9 @@ require("./config/auth")(passport)
 
 	app.use("/admin", admin);
 	app.use("/usuarios", usuarios);
-//Outros
 
-const PORT = 8081
+//Outros
+const PORT = process.env.PORT || 8081
 app.listen(PORT,() => { 
 	console.log("Servidor rodando na url http://localhost:8081")
 })
